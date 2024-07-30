@@ -1,6 +1,7 @@
 import cv2              # main module in OpenCV that provides developers with an easy-to-use interface for working with image and video processing functions
 import mediapipe as mp
-import numpy            # helps with trig later
+from trig_calcs import calculate_angle
+import numpy as np
 
 
 mp_drawing = mp.solutions.drawing_utils # drawing utilities
@@ -53,9 +54,16 @@ with mp_pose.Pose() as pose:
 
         try:
             landmarks = results.pose_landmarks.landmark
-            # to get index of landmarks of a body part position, use mp_pose.PoseLandmark.LEFT_SHOULDER.value
-            # can also use diagram in https://camo.githubusercontent.com/54e5f06106306c59e67acc44c61b2d3087cc0a6ee7004e702deb1b3eb396e571/68747470733a2f2f6d65646961706970652e6465762f696d616765732f6d6f62696c652f706f73655f747261636b696e675f66756c6c5f626f64795f6c616e646d61726b732e706e67
-            print(landmarks[mp_pose.PoseLandmark.LEFT_SHOULDER.value])
+            
+            # get left arm coordinates to calculate angle as lists of format [body_part_x_coordinate, body_part_y_coordinate]
+            shoulder = [landmarks[mp_pose.PoseLandmark.LEFT_SHOULDER.value].x,landmarks[mp_pose.PoseLandmark.LEFT_SHOULDER.value].y]
+            elbow = [landmarks[mp_pose.PoseLandmark.LEFT_ELBOW.value].x,landmarks[mp_pose.PoseLandmark.LEFT_ELBOW.value].y]
+            wrist = [landmarks[mp_pose.PoseLandmark.LEFT_WRIST.value].x,landmarks[mp_pose.PoseLandmark.LEFT_WRIST.value].y]
+            
+            angle = calculate_angle(shoulder, elbow, wrist)
+
+            print(angle)
+            
         except:
             pass
 
