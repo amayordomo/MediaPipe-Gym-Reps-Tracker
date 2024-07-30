@@ -17,7 +17,7 @@ if not cap.isOpened():
 
 # setup mediapipe instance
 with mp_pose.Pose() as pose:
-    i = 0
+
     # main loop to read and display frames
     while cap.isOpened():
         ret, frame = cap.read() # get current read from webcam // ret = return variable, frame = image from webcam
@@ -43,14 +43,27 @@ with mp_pose.Pose() as pose:
         image.flags.writeable = True
         image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
 
+        #   Extract landmarks if detections made
+
+        '''
+        # lists all 33 landmarks captured by MediaPipe Pose LandMarker
+        for lndmrk in mp_pose.PoseLandmark:
+            print(lndmrk)
+        '''
+
+        try:
+            landmarks = results.pose_landmarks.landmark
+            # to get index of landmarks of a body part position, use mp_pose.PoseLandmark.LEFT_SHOULDER.value
+            # can also use diagram in https://camo.githubusercontent.com/54e5f06106306c59e67acc44c61b2d3087cc0a6ee7004e702deb1b3eb396e571/68747470733a2f2f6d65646961706970652e6465762f696d616765732f6d6f62696c652f706f73655f747261636b696e675f66756c6c5f626f64795f6c616e646d61726b732e706e67
+            print(landmarks[mp_pose.PoseLandmark.LEFT_SHOULDER.value])
+        except:
+            pass
+
+
         #   Render detections
         dot_formatting = mp_drawing.DrawingSpec(color=(245,117,66), thickness=2, circle_radius=2)
         line_formatting = mp_drawing.DrawingSpec(color=(245,66,230), thickness=2, circle_radius=2)
         mp_drawing.draw_landmarks(image, results.pose_landmarks, mp_pose.POSE_CONNECTIONS, dot_formatting, line_formatting)
-        
-        if i==10:
-            print(results.pose_landmarks)
-        i+=1
 
         # display frame
         cv2.imshow('Mediapipe Feed', image) 
