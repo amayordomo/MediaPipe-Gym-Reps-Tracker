@@ -5,3 +5,4 @@ Tutorial inspiration:
 Documentation:
 - https://github.com/google-ai-edge/mediapipe/blob/master/docs/solutions/pose.md
 
+![33 poses landmark](https://github.com/user-attachments/assets/036d9303-1f64-4e30-b76a-b02e975c7982)
