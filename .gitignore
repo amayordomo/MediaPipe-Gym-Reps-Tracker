@@ -1,3 +1,7 @@
+# ignore large files
 myenv/lib/python3.12/site-packages/jaxlib/mlir/_mlir_libs/libjaxlib_mlir_capi.dylib
 myenv/lib/python3.12/site-packages/mediapipe/python/_framework_bindings.cpython-312-darwin.so
 myenv/lib/python3.12/site-packages/jaxlib/xla_extension.so
+
+# ignore log file
+app.log
