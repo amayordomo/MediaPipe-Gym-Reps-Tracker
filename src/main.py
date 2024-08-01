@@ -20,10 +20,9 @@ def main():
         exit()
 
     # Counter variables
-    left_counter = 0 
-    right_counter = 0 
-    left_stage = None
-    right_stage = None
+    left_counter, right_counter = 0 , 0 
+    left_stage, right_stage = None, None
+    left_angles_0, left_angles_1, right_angles_0, right_angles_1 = [], [], [], []
 
     # setup mediapipe instance
     with mp_pose.Pose() as pose:
@@ -53,9 +52,9 @@ def main():
             # Select user's exercise
             if exercise == "curls":
                 left_counter, right_counter, left_stage, right_stage = curls.count_bilateral_curls(
-                    results, left_counter, right_counter, left_stage, right_stage)
+                    results, left_counter, right_counter, left_stage, right_stage, left_angles_0, right_angles_0)
             elif exercise == "squats":
-                left_counter, left_stage = squats.count_squats(results, left_counter, left_stage)
+                left_counter, left_stage = squats.count_squats(results, left_counter, left_stage, left_angles_0, left_angles_1, right_angles_0, right_angles_1)
 
             # Render counter
             render_rep_counter.render_counter(image, left_counter, right_counter, left_stage, right_stage)
