@@ -1,10 +1,11 @@
 import mediapipe as mp
 from utils import angles
+import time
 
 mp_drawing = mp.solutions.drawing_utils
 mp_pose = mp.solutions.pose
 
-def count_squats(results, counter, stage, left_hip_angles, left_knee_angles, right_hip_angles, right_knee_angles):
+def count_squats(results, counter, stage, left_hip_angles, left_knee_angles, right_hip_angles, right_knee_angles, last_rep_time):
     try:
         landmarks = results.pose_landmarks.landmark
         
@@ -36,10 +37,12 @@ def count_squats(results, counter, stage, left_hip_angles, left_knee_angles, rig
         if left_knee_angle < 90 and right_knee_angle < 90:
             stage = "down"
         if left_hip_angle > 170 and left_knee_angle > 170 and right_hip_angle > 170 and right_knee_angle > 170 and stage == "down":
-            stage = "up"
-            counter += 1
+            if last_rep_time - time.time() > 2: # 2 seconds minimum between reps
+                stage = "up"
+                counter += 1
+                last_rep_time = time.time()
 
     except Exception as e:
         print(e)
 
-    return counter, stage
+    return counter, stage, last_rep_time

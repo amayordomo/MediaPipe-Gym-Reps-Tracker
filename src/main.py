@@ -2,6 +2,7 @@ import cv2              # main module in OpenCV that provides developers with an
 import mediapipe as mp
 from exercises import curls, squats
 from utils import render_rep_counter, user_input
+import time
 
 mp_drawing = mp.solutions.drawing_utils
 mp_pose = mp.solutions.pose
@@ -23,6 +24,7 @@ def main():
     left_counter, right_counter = 0 , 0 
     left_stage, right_stage = None, None
     left_angles_0, left_angles_1, right_angles_0, right_angles_1 = [], [], [], []
+    last_left_rep_time, last_right_rep_time = time.time()-10, time.time()-10
 
     # setup mediapipe instance
     with mp_pose.Pose() as pose:
@@ -51,10 +53,10 @@ def main():
 
             # Select user's exercise
             if exercise == "curls":
-                left_counter, right_counter, left_stage, right_stage = curls.count_bilateral_curls(
-                    results, left_counter, right_counter, left_stage, right_stage, left_angles_0, right_angles_0)
+                left_counter, right_counter, left_stage, right_stage, last_left_rep_time, last_right_rep_time = curls.count_bilateral_curls(
+                    results, left_counter, right_counter, left_stage, right_stage, left_angles_0, right_angles_0, last_left_rep_time, last_right_rep_time)
             elif exercise == "squats":
-                left_counter, left_stage = squats.count_squats(results, left_counter, left_stage, left_angles_0, left_angles_1, right_angles_0, right_angles_1)
+                left_counter, left_stage, last_left_rep_time = squats.count_squats(results, left_counter, left_stage, left_angles_0, left_angles_1, right_angles_0, right_angles_1, last_left_rep_time)
 
             # Render counter
             render_rep_counter.render_counter(image, left_counter, right_counter, left_stage, right_stage)

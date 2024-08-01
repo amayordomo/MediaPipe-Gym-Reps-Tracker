@@ -1,12 +1,13 @@
 import mediapipe as mp
 from utils import angles
 import numpy as np
+import time
 
 mp_drawing = mp.solutions.drawing_utils
 mp_pose = mp.solutions.pose
 
 # Bilateral curls counter
-def count_bilateral_curls(results, left_counter, right_counter, left_stage, right_stage, left_angles, right_angles, stability_threshold=0.25):
+def count_bilateral_curls(results, left_counter, right_counter, left_stage, right_stage, left_angles, right_angles, last_left_rep_time, last_right_rep_time, stability_threshold=0.25):
     try:
         landmarks = results.pose_landmarks.landmark
 
@@ -30,8 +31,10 @@ def count_bilateral_curls(results, left_counter, right_counter, left_stage, righ
         if left_angle > 160:
             left_stage = "down"
         if left_angle < 30 and left_stage == "down":
-            left_stage = "up"
-            left_counter += 1
+            if time.time() - last_left_rep_time > 1.25: # 1.25 s minium between reps
+                left_stage = "up"
+                left_counter += 1
+                last_left_rep_time = time.time()
 
         # Right arm
         right_shoulder = [landmarks[mp_pose.PoseLandmark.RIGHT_SHOULDER.value].x, landmarks[mp_pose.PoseLandmark.RIGHT_SHOULDER.value].y]
@@ -53,10 +56,12 @@ def count_bilateral_curls(results, left_counter, right_counter, left_stage, righ
         if right_angle > 160:
             right_stage = "down"
         if right_angle < 30 and right_stage == "down":
-            right_stage = "up"
-            right_counter += 1
+            if time.time() - last_right_rep_time > 1.25: # 1.25 s minimum between reps
+                right_stage = "up"
+                right_counter += 1
+                last_right_rep_time = time.time()
 
     except Exception as e:
         print(e)
 
-    return left_counter, right_counter, left_stage, right_stage
+    return left_counter, right_counter, left_stage, right_stage, last_left_rep_time, last_right_rep_time
