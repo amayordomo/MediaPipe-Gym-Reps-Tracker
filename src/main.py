@@ -1,6 +1,6 @@
 import cv2              # main module in OpenCV that provides developers with an easy-to-use interface for working with image and video processing functions
 import mediapipe as mp
-from exercises import curls
+from exercises import curls, squats
 from utils import render_rep_counter, user_input
 
 mp_drawing = mp.solutions.drawing_utils
@@ -54,6 +54,8 @@ def main():
             if exercise == "curls":
                 left_counter, right_counter, left_stage, right_stage = curls.count_bilateral_curls(
                     results, left_counter, right_counter, left_stage, right_stage)
+            elif exercise == "squats":
+                left_counter, left_stage = squats.count_squats(results, left_counter, left_stage)
 
             # Render counter
             render_rep_counter.render_counter(image, left_counter, right_counter, left_stage, right_stage)

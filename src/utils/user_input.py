@@ -1,10 +1,9 @@
-SUPPORTED_EXERCISES = ["curls"]
+SUPPORTED_EXERCISES = ["curls", "squats"]
 
 def get_valid_exercise():
-    valid_exercises = ["curls", "other_exercise1", "other_exercise2"]  # Add other valid exercises as needed
     while True:
         exercise = input("Enter the exercise you are doing (e.g., curls): ").lower()
-        if exercise in valid_exercises:
+        if exercise in SUPPORTED_EXERCISES:
             return exercise
         else:
             print("\tInvalid exercise. Please enter a valid exercise.")
