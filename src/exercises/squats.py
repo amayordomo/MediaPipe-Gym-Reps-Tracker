@@ -2,6 +2,9 @@ import mediapipe as mp
 from utils import angles
 import time
 
+DOWN_ANGLE_THRESHOLD = 95  # Angle for the "down" stage (bottom of squat)
+UP_ANGLE_THRESHOLD = 170     # Angle for the "up" stage (top of squat)
+
 mp_drawing = mp.solutions.drawing_utils
 mp_pose = mp.solutions.pose
 
@@ -34,9 +37,9 @@ def count_squats(results, counter, stage, left_hip_angles, left_knee_angles, rig
         right_knee_angle = angles.smooth_angle(right_knee_angle, right_knee_angles)
 
         # Count reps
-        if left_knee_angle < 90 and right_knee_angle < 90:
+        if left_knee_angle < DOWN_ANGLE_THRESHOLD and right_knee_angle < DOWN_ANGLE_THRESHOLD:
             stage = "down"
-        if left_hip_angle > 170 and left_knee_angle > 170 and right_hip_angle > 170 and right_knee_angle > 170 and stage == "down":
+        if left_hip_angle > UP_ANGLE_THRESHOLD and left_knee_angle > UP_ANGLE_THRESHOLD and right_hip_angle > UP_ANGLE_THRESHOLD and right_knee_angle > UP_ANGLE_THRESHOLD and stage == "down":
             if last_rep_time - time.time() > 2: # 2 seconds minimum between reps
                 stage = "up"
                 counter += 1

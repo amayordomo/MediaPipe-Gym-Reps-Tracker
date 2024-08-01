@@ -3,6 +3,9 @@ from utils import angles
 import numpy as np
 import time
 
+DOWN_ANGLE_THRESHOLD = 160  # Angle for the "down" stage (arm extended)
+UP_ANGLE_THRESHOLD = 30     # Angle for the "up" stage (arm flexed)
+
 mp_drawing = mp.solutions.drawing_utils
 mp_pose = mp.solutions.pose
 
@@ -28,9 +31,9 @@ def count_bilateral_curls(results, left_counter, right_counter, left_stage, righ
             left_shoulder_movement = 0
 
         # Count rep given correct angle(s)
-        if left_angle > 160:
+        if left_angle > DOWN_ANGLE_THRESHOLD:
             left_stage = "down"
-        if left_angle < 30 and left_stage == "down":
+        if left_angle < UP_ANGLE_THRESHOLD and left_stage == "down":
             if time.time() - last_left_rep_time > 1.25: # 1.25 s minium between reps
                 left_stage = "up"
                 left_counter += 1
