@@ -23,4 +23,5 @@ def smooth_angle(angle, prev_angles, window_size=5):
         prev_angles.pop(0)
     
     # Calculate the average of the angles in the list to get the smoothed angle
-    return np.mean(prev_angles)
+    # Smooth only the angle values
+    return np.mean([a[0] for a in prev_angles])

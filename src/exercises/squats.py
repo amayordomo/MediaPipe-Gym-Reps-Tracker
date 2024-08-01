@@ -32,7 +32,6 @@ def count_squats(results, counter, stage, left_hip_angles, left_knee_angles, rig
         right_knee_angle = angles.calculate_angle(right_hip, right_knee, right_ankle)
         right_knee_angle = angles.smooth_angle(right_knee_angle, right_knee_angles)
 
-
         # Count reps
         if left_knee_angle < 90 and right_knee_angle < 90:
             stage = "down"
