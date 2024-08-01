@@ -1,12 +1,15 @@
 import mediapipe as mp
 from utils import angles
 import time
+from log_config import get_logger
 
 DOWN_ANGLE_THRESHOLD = 95  # Angle for the "down" stage (bottom of squat)
 UP_ANGLE_THRESHOLD = 170     # Angle for the "up" stage (top of squat)
 
 mp_drawing = mp.solutions.drawing_utils
 mp_pose = mp.solutions.pose
+
+logger = get_logger(__name__)
 
 def count_squats(results, counter, stage, left_hip_angles, left_knee_angles, right_hip_angles, right_knee_angles, last_rep_time):
     try:
@@ -46,6 +49,6 @@ def count_squats(results, counter, stage, left_hip_angles, left_knee_angles, rig
                 last_rep_time = time.time()
 
     except Exception as e:
-        print(e)
+        logger.error(e)
 
     return counter, stage, last_rep_time

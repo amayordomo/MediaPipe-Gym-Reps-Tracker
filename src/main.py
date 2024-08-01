@@ -1,13 +1,17 @@
 import cv2              # main module in OpenCV that provides developers with an easy-to-use interface for working with image and video processing functions
+import time
 import mediapipe as mp
+from log_config import get_logger
 from exercises import curls, squats
 from utils import render_rep_counter, user_input
-import time
 
 mp_drawing = mp.solutions.drawing_utils
 mp_pose = mp.solutions.pose
+logger = get_logger(__name__)
 
 def main():
+    logger.info("Main function started")
+
     # Get user input for exercise type and target rep count
     exercise = user_input.get_valid_exercise()
     target_reps = user_input.get_valid_reps()
@@ -37,7 +41,7 @@ def main():
 
             # check camera availability
             if not ret:
-                print("Can't receive frame (stream end?). Exiting ...")
+                logger.log("Can't receive frame (stream end?). Exiting ...")
                 break
 
             # Check frame validity - if not valid, skip current iteration and try to read next frame
@@ -74,8 +78,10 @@ def main():
                 break
 
     cap.release()
-    cv2.destroyAllWindows() # close video feed
-
+    cv2.destroyAllWindows()
+    logger.info("Main function ended")
 
 if __name__ == "__main__":
+    logger.info("Program started")
     main()
+    logger.info("Program ended")

@@ -2,6 +2,7 @@ import mediapipe as mp
 from utils import angles
 import numpy as np
 import time
+from log_config import get_logger
 
 DOWN_ANGLE_THRESHOLD = 160  # Angle for the "down" stage (arm extended)
 UP_ANGLE_THRESHOLD = 30     # Angle for the "up" stage (arm flexed)
@@ -9,8 +10,10 @@ UP_ANGLE_THRESHOLD = 30     # Angle for the "up" stage (arm flexed)
 mp_drawing = mp.solutions.drawing_utils
 mp_pose = mp.solutions.pose
 
+logger = get_logger(__name__)
+
 # Bilateral curls counter
-def count_bilateral_curls(results, left_counter, right_counter, left_stage, right_stage, left_angles, right_angles, last_left_rep_time, last_right_rep_time, stability_threshold=0.25):
+def count_bilateral_curls(results, left_counter, right_counter, left_stage, right_stage, left_angles, right_angles, last_left_rep_time, last_right_rep_time, stability_threshold=1):
     try:
         landmarks = results.pose_landmarks.landmark
 
@@ -65,6 +68,6 @@ def count_bilateral_curls(results, left_counter, right_counter, left_stage, righ
                 last_right_rep_time = time.time()
 
     except Exception as e:
-        print(e)
+        logger.error(e)
 
     return left_counter, right_counter, left_stage, right_stage, last_left_rep_time, last_right_rep_time
